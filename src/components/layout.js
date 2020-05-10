@@ -2,14 +2,28 @@ import React from 'react';
 import { Global, css } from '@emotion/core';
 import { Helmet } from 'react-helmet';
 import Header from './header';
+import Footer from './footer';
+import useSeo from '../hooks/use-seo';
 
 const Layout = ( props ) => {
+
+    //Obtenemos los datos desde el hook
+    const seo = useSeo();
+    //Extraemos los datos SEO del site
+    //const { siteName, fallbackSeo: { description, title } } = seo;
+    const { fallbackSeo: { description, title } } = seo;
+
     return ( 
       <>
             <Global
                 styles={css`
                     html {
                         font-size: 62.5%;
+                        box-sizing: border-box; /* para que al agregar border o padding no afecte al box-sizing */
+                    }
+
+                    *, *:before, *:after {  /* para que al agregar border o padding no afecte al box-sizing */
+                        box-sizing: inherit;
                     }
 
                     body {
@@ -40,13 +54,18 @@ const Layout = ( props ) => {
                 `}
             />      
       <Helmet>
-          <title>Gatsby Hotel</title>
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" />
-          <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700|Roboto:400,700&display=swap' rel='stylesheet' />
+            <title>{title}</title>
+            <meta name="description" content={description} />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" />
+            <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700|Roboto:400,700&display=swap' rel='stylesheet' />
       </Helmet>
 
       <Header />
+
       {props.children}
+      <Footer 
+        title={title}
+      />
   </>
      );
 }
